@@ -5,7 +5,7 @@ Eine installierbare Offline-Web-App für das Uferangeln an der Mosel bei Temmels
 ## Funktionen
 
 - Filter für vier Fischarten (Barsch, Zander, Hecht, Rapfen), Wassertrübung, Licht/Wetter, Strömung und Rig.
-- Bis zu drei Empfehlungen aus 15 Kombinationen, mit Köder, Haken, Startgewicht, Führung und einer Materialliste. Hecht benötigt immer ein bissfestes Stahlvorfach.
+- Bis zu drei Empfehlungen aus 18 Kombinationen, mit Köder, Haken, Startgewicht, Führung und einer Materialliste. Hecht benötigt immer ein bissfestes Stahlvorfach.
 - Köder, Schnüre, Vorfächer, Snaps, Stopper, Perlen, Wirbel, Gewichte und Haken können im lokalen Bestand markiert werden. Fehlende Teile stehen direkt in jeder Empfehlung. Vorhandene Köder erhalten einen kleinen Vorrang bei gleicher Eignung.
 - Offline-Nutzung nach dem ersten vollständigen Laden über einen Service Worker.
 - Shop-Links und vier **historische** CAMO-Preise mit Prüfdatum 27.09.2026. Es findet keine automatische Preisaktualisierung statt.
