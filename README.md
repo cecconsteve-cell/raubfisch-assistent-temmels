@@ -1,15 +1,15 @@
 # Raubfisch-Assistent Temmels
 
-Eine installierbare Offline-Web-App für das Uferangeln an der Mosel bei Temmels (±500 m).
+Eine installierbare Offline-Web-App für das Uferangeln an der Mosel bei Temmels.
 
 ## Funktionen
 
-- Filter für Fischart, Wassertrübung, Licht/Wetter und Rig.
-- Bis zu drei Empfehlungen aus acht vorhandenen Barsch-/Zander-Kombinationen, mit Köder, Haken, Gewicht und Führung.
-- Bestand von zehn Produkten, lokal im Browser gespeichert. Vorhandene Köder erhalten einen kleinen Vorrang bei gleicher Eignung.
+- Filter für vier Fischarten (Barsch, Zander, Hecht, Rapfen), Wassertrübung, Licht/Wetter, Strömung und Rig.
+- Bis zu drei Empfehlungen aus 15 Kombinationen, mit Köder, Haken, Startgewicht, Führung und einer Materialliste. Hecht benötigt immer ein bissfestes Stahlvorfach.
+- Köder, Schnüre, Vorfächer, Snaps, Stopper, Perlen, Wirbel, Gewichte und Haken können im lokalen Bestand markiert werden. Fehlende Teile stehen direkt in jeder Empfehlung. Vorhandene Köder erhalten einen kleinen Vorrang bei gleicher Eignung.
 - Offline-Nutzung nach dem ersten vollständigen Laden über einen Service Worker.
 - Shop-Links und vier **historische** CAMO-Preise mit Prüfdatum 27.09.2026. Es findet keine automatische Preisaktualisierung statt.
-- Hecht und Rapfen sind als Filter vorbereitet. Es gibt noch keine bewerteten Vorschläge für diese Fischarten.
+- Bei jedem Öffnen mit Internet werden die aktuell veröffentlichten Daten geladen. Neue Marktangebote werden redaktionell recherchiert und nach Prüfung in den Katalog übernommen; die Seite führt keine Live-Shop-Suche aus.
 
 ## Start
 
@@ -19,4 +19,10 @@ Für GitHub Pages: Repository-Einstellungen → Pages → `Deploy from a branch`
 
 ## Datenbasis
 
-`data/catalog.json` stammt aus `Raubfisch_Assistent_Temmels_Datenbasis.xlsx` vom 27.09.2026. `tools/export_data.py` exportiert vier Tabellen erneut, wenn die Excel-Datei im übergeordneten Verzeichnis `source/` liegt. Die Empfehlung passt die vorhandenen Basisbewertungen an Übereinstimmungen mit Wasser, Licht und vorsichtigem Beißverhalten an. Wenn kein direkter Wasser-Treffer vorliegt, wird das in der App ausdrücklich angezeigt. Die App nutzt noch keine Live-Wetter-, Wasserstands- oder Shop-API.
+`data/catalog.json` stammt aus `Raubfisch_Assistent_Temmels_Datenbasis.xlsx` vom 27.09.2026. `tools/export_data.py` exportiert diese vier Tabellen erneut, wenn die Excel-Datei im übergeordneten Verzeichnis `source/` liegt. `data/additions.json` ergänzt die recherchierten Hecht-/Rapfen-Vorschläge, Materialgrößen, Quellen und das Prüfdatum. Der Export überschreibt diese Ergänzungen nicht.
+
+Die Empfehlung passt die Basisbewertungen an Wasser, Licht, Strömung und vorsichtiges Beißverhalten an. Gewichte und Materialstärken sind redaktionelle Startwerte für die Mosel, keine gemessenen Fangquoten; Gewässerkontakt, Ködergröße und Tragkraft müssen vor Ort geprüft werden. Wenn kein direkter Wasser-Treffer vorliegt, wird das in der App angezeigt. Die App nutzt keine Live-Wetter-, Wasserstands- oder Shop-API. Materialbestand liegt nur im jeweiligen Browser und wird nicht synchronisiert.
+
+## Pflege der Empfehlungen
+
+Neue Rigs und Köder erst nach Abgleich mit offiziellen Produkt- oder Herstellerseiten in `data/additions.json` übernehmen, den Link unter `sources` dokumentieren und `reviewedAt` aktualisieren. CAMO Tackle zuerst prüfen, ergänzend Hersteller und internationale Quellen. Keine aktuellen Preise ohne Datum übernehmen. Nach Änderungen `node tools/test_app.mjs` ausführen, dann `sw.js` für einen neuen Offline-Cache aktualisieren.
