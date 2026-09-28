@@ -30,6 +30,12 @@ elements['#flow'].value='stark'; elements['#water'].value='trüb'; elements['#fi
 assert.match(elements['#results'].innerHTML,/18 g Eigengewicht/);
 elements['#fish'].value='Barsch'; elements['#water'].value='trüb'; elements['#filters'].change();
 assert.match(elements['#results'].innerHTML,/Motoroil\/Pink/);
+elements['#rig'].value='Ned Rig'; elements['#water'].value='klar'; elements['#light'].value='früh'; elements['#filters'].change();
+assert.match(elements['#results'].innerHTML,/TRD TubeZ/);
+assert.match(elements['#results'].innerHTML,/CAMO Ned Jigs/);
+elements['#fish'].value='Zander'; elements['#water'].value='trüb'; elements['#light'].value='Nacht'; elements['#filters'].change();
+assert.match(elements['#results'].innerHTML,/Big TRD/);
+elements['#fish'].value='Barsch'; elements['#rig'].value=''; elements['#water'].value='trüb'; elements['#light'].value='bewölkt'; elements['#filters'].change();
 elements['#products'].click({target:{closest:()=>({dataset:{id:'P006'}})}});
 assert.deepEqual(JSON.parse(saved.get('raubfisch-temmels-stock-v1')),['P006']);
 assert.match(elements['#results'].innerHTML,/✓ FAT Swing Impact/);
