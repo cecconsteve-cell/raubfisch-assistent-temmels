@@ -5,7 +5,7 @@ import vm from 'node:vm';
 const root = new URL('../', import.meta.url);
 const catalog = JSON.parse(fs.readFileSync(new URL('data/catalog.json', root), 'utf8'));
 const additions = JSON.parse(fs.readFileSync(new URL('data/additions.json', root), 'utf8'));
-const elements = Object.fromEntries(['#fish','#water','#light','#rig','#flow','#passive','#data-status','#match-note','#results','#products','#gear','#sources','#filters','#order-form','#order-item','#order-quantity','#order-status','#orders'].map(key => [key, {value:'', checked:false, innerHTML:'', textContent:'', addEventListener(name, fn){this[name]=fn;}}]));
+const elements = Object.fromEntries(['#fish','#water','#light','#rig','#flow','#passive','#data-status','#match-note','#results','#products','#gear','#sources','#filters','#order-form','#order-item','#order-quantity','#order-status','#orders','#mail-text','#mail-file','#analyze-mail','#mail-status','#mail-matches','#import-mail'].map(key => [key, {value:'', checked:false, disabled:false, innerHTML:'', textContent:'', addEventListener(name, fn){this[name]=fn;}}]));
 Object.assign(elements['#fish'], {value:'Zander'});
 Object.assign(elements['#water'], {value:'klar'});
 Object.assign(elements['#light'], {value:'bewölkt'});
@@ -16,7 +16,7 @@ const context = {
   document:{querySelector: selector => elements[selector]},
   localStorage:{getItem:key=>saved.get(key),setItem:(key,value)=>saved.set(key,value)},
   fetch:async(url)=>({ok:true,json:async()=>url.includes('additions') ? additions : catalog}), URL,
-  navigator:{}, window:{addEventListener(){}}, console,
+  navigator:{}, window:{addEventListener(){}}, console, TextDecoder, Uint8Array, atob,
 };
 vm.runInNewContext(fs.readFileSync(new URL('app.js',root),'utf8'),context);
 await new Promise(resolve=>setImmediate(resolve));
@@ -50,6 +50,17 @@ assert.match(elements['#orders'].innerHTML,/Als geliefert markieren/);
 elements['#orders'].click({target:{closest:selector=>selector.includes('deliver') ? {dataset:{deliverId:'G06'}} : null}});
 assert.equal(JSON.parse(saved.get('raubfisch-temmels-stock-v2')).G06,2);
 assert.deepEqual(JSON.parse(saved.get('raubfisch-temmels-orders-v1')),{});
+elements['#mail-text'].value='Versandankündigung\n2 x Big TRD Fire Craw 4 / 10,5 cm\n1 x Flexonit Stahlvorfach mit Snap Gr. 1';
+elements['#analyze-mail'].click();
+assert.match(elements['#mail-matches'].innerHTML,/Big TRD/);
+assert.match(elements['#mail-matches'].innerHTML,/Flexonit Stahlvorfach/);
+assert.equal(elements['#import-mail'].disabled,false);
+elements['#import-mail'].click();
+assert.equal(JSON.parse(saved.get('raubfisch-temmels-orders-v1')).P018.quantity,2);
+assert.equal(JSON.parse(saved.get('raubfisch-temmels-orders-v1')).G06.quantity,1);
+const ambiguous = context.extractMailCandidates('1 x Easy Shiner Tasty Motoroil');
+assert.equal(ambiguous.filter(item=>item.ambiguous).length,2);
+assert.equal(ambiguous.some(item=>item.checked),false);
 for (const fish of ['Barsch','Zander','Hecht','Rapfen']) {
   elements['#fish'].value=fish; elements['#rig'].value=''; elements['#filters'].change();
   assert.match(elements['#results'].innerHTML,/EMPFEHLUNG 1/);
