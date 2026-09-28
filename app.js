@@ -24,9 +24,11 @@ function weightFor(combo, flow) {
   const key = `${combo.Fischart}/${combo['Rig-Art']}`;
   const choices = {
     'Barsch/Jig':['5 g','7 g','10 g'], 'Barsch/Free Rig':['5 g','7 g','9 g'],
+    'Barsch/Ned Rig':['2,8 g','3,5 g','4,6 g'],
     'Barsch/Texas':['5,25 g','7 g','10,5 g'], 'Barsch/Carolina':['5,25 g','7 g','10,5 g'],
     'Barsch/Dropshot':['7 g','10,5 g','14 g'],
     'Zander/Jig':['7 g','10 g','14 g'], 'Zander/Free Rig':['9 g','11 g','14 g'],
+    'Zander/Ned Rig':['4,6 g','5,6 g','7 g'],
     'Zander/Texas':['10,5 g','14 g','17,5 g'], 'Zander/Carolina':['7 g','10,5 g','14 g'],
     'Zander/Dropshot':['10,5 g','14 g','17,5 g'],
     'Hecht/Screw Jig':['5 g','10 g','20 g'], 'Hecht/Jig':['10 g','15 g','25 g']
@@ -35,7 +37,7 @@ function weightFor(combo, flow) {
 }
 
 function gearSpec(item, combo, flow) {
-  if (['G16','G17','G18','G19','G20','G21','G22'].includes(item.id)) {
+  if (['G16','G17','G18','G19','G20','G21','G22','G23'].includes(item.id)) {
     return `${weightFor(combo, flow)} · ${combo.Haken}`;
   }
   return item.spec;
@@ -50,6 +52,7 @@ function requirementsFor(combo, filters) {
   if (fish === 'Barsch' || fish === 'Zander') {
     if (rig === 'Jig') { add(fish === 'Barsch' ? 'G19' : 'G20', [fish === 'Barsch' ? 'P010' : 'P009']); add(fish === 'Barsch' ? 'G09' : 'G10'); }
     if (rig === 'Free Rig') add('G16',['P008']);
+    if (rig === 'Ned Rig') add('G23',['P017']);
     if (rig === 'Texas' || rig === 'Carolina') add('G17',['P007']);
     if (rig === 'Texas') add('G12',['P007']);
     if (rig === 'Carolina') { add(filters.flow === 'stark' && fish === 'Zander' ? 'G14' : 'G13',['P007']); add('G15',['P007']); }
