@@ -11,6 +11,7 @@ const shopLink = (url) => { try { const parsed = new URL(url); return parsed.pro
 let catalog;
 let stock = {};
 let orders = {};
+let mailCandidates = [];
 try {
   const savedStock = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
   if (savedStock && !Array.isArray(savedStock)) stock = savedStock;
@@ -135,8 +136,21 @@ function stockControls(id, name) {
 
 function inventoryItems() {
   return [
-    ...catalog.products.map(item => ({id:item.ID, name:`${item.Produkt} · ${item.Farbe}`})),
-    ...catalog.gear.map(item => ({id:item.id, name:item.name}))
+    ...catalog.products.map(item => ({
+      id:item.ID,
+      name:`${item.Produkt} · ${item.Farbe} · ${item['Größe']}`,
+      primary:item.Produkt,
+      secondary:item.Farbe === 'gemischt' ? '' : item.Farbe,
+      variant:String(item['Größe']).match(/[\d.,]+/)?.[0] || ''
+    })),
+    ...catalog.gear.map(item => ({
+      id:item.id,
+      name:`${item.name} · ${item.spec}`,
+      primary:item.name,
+      secondary:'',
+      variant:(String(item.spec).match(/Gr\.\s*([\d/.-]+)/i)?.[1] || ''),
+      gear:true
+    }))
   ];
 }
 
@@ -147,6 +161,73 @@ function itemName(id) {
 function renderOrders() {
   const entries = Object.entries(orders).filter(([, order]) => Number(order.quantity) > 0);
   $('#orders').innerHTML = entries.length ? `<h4>Offene Online-Bestellungen</h4>${entries.map(([id, order]) => `<article class="order"><div><strong>${safe(itemName(id))}</strong><span>${safe(order.quantity)} Stück · bestellt am ${safe(order.orderedAt)}</span></div><div class="order-buttons"><button type="button" data-cancel-id="${safe(id)}">Stornieren</button><button type="button" data-deliver-id="${safe(id)}" class="deliver">Als geliefert markieren</button></div></article>`).join('')}` : '<p class="empty-orders">Keine offenen Online-Bestellungen.</p>';
+}
+
+function addOrder(id, quantity) {
+  const current = orders[id] || {quantity:0, orderedAt:new Date().toLocaleDateString('de-DE')};
+  orders[id] = {...current, quantity:Number(current.quantity) + quantity};
+}
+
+function normalizeMailText(value) {
+  return String(value || '').normalize('NFD').replace(/\p{Diacritic}/gu, '').replace(/ß/g, 'ss').toLocaleLowerCase('de').replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+function decodeMailSource(source) {
+  let text = String(source || '').replace(/=\r?\n/g, '');
+  text = text.replace(/(?:=[0-9A-F]{2})+/gi, sequence => {
+    try {
+      const bytes = sequence.match(/[0-9A-F]{2}/gi).map(value => Number.parseInt(value, 16));
+      return new TextDecoder().decode(new Uint8Array(bytes));
+    } catch { return sequence; }
+  });
+  const base64Parts = [...text.matchAll(/Content-Transfer-Encoding:\s*base64[^\r\n]*\r?\n(?:[^\r\n]*\r?\n)*?\r?\n([A-Za-z0-9+/=\r\n]+?)(?=\r?\n--|$)/gi)];
+  for (const match of base64Parts) {
+    try {
+      const binary = atob(match[1].replace(/\s/g, ''));
+      const bytes = Uint8Array.from(binary, character => character.charCodeAt(0));
+      text += `\n${new TextDecoder().decode(bytes)}`;
+    } catch { /* unsupported MIME part stays available as raw text */ }
+  }
+  return text.replace(/<br\s*\/?\s*>/gi, '\n').replace(/<[^>]+>/g, ' ');
+}
+
+function quantityFromLine(line) {
+  const match = line.match(/(?:menge|anzahl)\s*:?\s*(\d{1,2})/i) || line.match(/\b(\d{1,2})\s*(?:x|×|stk\.?|stueck|stück)\b/i) || line.match(/\b(?:x|×)\s*(\d{1,2})\b/i);
+  return Math.max(1, Math.min(99, Number(match?.[1]) || 1));
+}
+
+function extractMailCandidates(source) {
+  const decoded = decodeMailSource(source);
+  const lines = decoded.split(/\r?\n/).map(raw => ({raw, text:normalizeMailText(raw)})).filter(line => line.text);
+  const items = inventoryItems().map(item => ({...item, primaryKey:normalizeMailText(item.primary), secondaryKey:normalizeMailText(item.secondary)}));
+  const found = new Map();
+  for (const item of items) {
+    const line = lines.find(candidate => candidate.text.includes(item.primaryKey) && (!item.secondaryKey || candidate.text.includes(item.secondaryKey)));
+    if (!line) continue;
+    const group = items.filter(candidate => candidate.primaryKey === item.primaryKey && candidate.secondaryKey === item.secondaryKey);
+    const suffix = line.text.slice(line.text.indexOf(item.primaryKey) + item.primaryKey.length);
+    const variantKey = normalizeMailText(item.gear && item.variant ? `Gr ${item.variant}` : item.variant);
+    const exactVariants = group.filter(candidate => {
+      const key = normalizeMailText(candidate.gear && candidate.variant ? `Gr ${candidate.variant}` : candidate.variant);
+      return key && suffix.includes(key);
+    });
+    const exact = group.length === 1 || (variantKey && exactVariants.length === 1 && exactVariants[0].id === item.id);
+    if (!exact && exactVariants.length) continue;
+    found.set(item.id, {id:item.id, name:item.name, quantity:quantityFromLine(line.raw), checked:exact, ambiguous:!exact});
+  }
+  return [...found.values()];
+}
+
+function renderMailMatches() {
+  $('#mail-matches').innerHTML = mailCandidates.map(candidate => `<article class="mail-match"><input type="checkbox" data-mail-check="${safe(candidate.id)}" ${candidate.checked ? 'checked' : ''} aria-label="${safe(candidate.name)} auswählen"><div><strong>${safe(candidate.name)}</strong>${candidate.ambiguous ? '<em>Variante bitte prüfen</em>' : ''}</div><label>Menge<input type="number" min="1" max="99" value="${safe(candidate.quantity)}" data-mail-quantity="${safe(candidate.id)}"></label></article>`).join('');
+  $('#import-mail').disabled = !mailCandidates.some(candidate => candidate.checked);
+}
+
+function analyzeMail() {
+  mailCandidates = extractMailCandidates($('#mail-text').value);
+  renderMailMatches();
+  const selected = mailCandidates.filter(candidate => candidate.checked).length;
+  $('#mail-status').textContent = mailCandidates.length ? `${mailCandidates.length} möglicher Artikel erkannt · ${selected} eindeutig ausgewählt.` : 'Keine Artikel aus dem Katalog erkannt. Prüfe Produktname, Farbe und Größe im Mailtext.';
 }
 
 async function init() {
@@ -176,8 +257,7 @@ async function init() {
       const id = $('#order-item').value;
       const quantity = Math.max(1, Math.min(99, Number.parseInt($('#order-quantity').value, 10) || 1));
       if (event.submitter?.value === 'ordered') {
-        const current = orders[id] || {quantity:0, orderedAt:new Date().toLocaleDateString('de-DE')};
-        orders[id] = {...current, quantity:Number(current.quantity) + quantity};
+        addOrder(id, quantity);
         saveOrders(); renderOrders();
         $('#order-status').textContent = `${quantity} × ${itemName(id)} als bestellt gespeichert.`;
       } else {
@@ -202,6 +282,38 @@ async function init() {
       }
       delete orders[id]; saveOrders();
       renderOrders(); renderProducts(); renderRecommendations();
+    });
+    $('#analyze-mail').addEventListener('click', analyzeMail);
+    $('#mail-file').addEventListener('change', async event => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      try {
+        $('#mail-text').value = await file.text();
+        analyzeMail();
+      } catch {
+        $('#mail-status').textContent = 'Die E-Mail-Datei konnte nicht gelesen werden.';
+      }
+    });
+    $('#mail-matches').addEventListener('change', event => {
+      const check = event.target.closest('input[data-mail-check]');
+      const quantity = event.target.closest('input[data-mail-quantity]');
+      if (check) {
+        const candidate = mailCandidates.find(item => item.id === check.dataset.mailCheck);
+        if (candidate) candidate.checked = check.checked;
+      }
+      if (quantity) {
+        const candidate = mailCandidates.find(item => item.id === quantity.dataset.mailQuantity);
+        if (candidate) candidate.quantity = Math.max(1, Math.min(99, Number.parseInt(quantity.value, 10) || 1));
+      }
+      $('#import-mail').disabled = !mailCandidates.some(candidate => candidate.checked);
+    });
+    $('#import-mail').addEventListener('click', () => {
+      const selected = mailCandidates.filter(candidate => candidate.checked);
+      if (!selected.length) return;
+      for (const candidate of selected) addOrder(candidate.id, candidate.quantity);
+      saveOrders(); renderOrders();
+      $('#mail-status').textContent = `${selected.length} Artikel aus der E-Mail als offene Bestellung übernommen.`;
+      mailCandidates = []; renderMailMatches();
     });
   } catch {
     $('#match-note').textContent = 'Die Daten konnten nicht geladen werden. Öffne die App einmal mit Internet und versuche es erneut.';
