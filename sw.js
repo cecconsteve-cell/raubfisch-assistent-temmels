@@ -1,4 +1,4 @@
-const CACHE = 'raubfisch-temmels-v4';
+const CACHE = 'raubfisch-temmels-v5';
 const ASSETS = ['./','./index.html','./styles.css','./enhancements.css','./app.js','./data/catalog.json','./data/additions.json','./manifest.webmanifest','./icons/fish.svg'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
