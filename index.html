@@ -48,6 +48,15 @@
       </form>
       <p id="order-status" class="order-status" role="status" aria-live="polite"></p>
       <div id="orders" class="order-list"></div>
+      <details class="mail-import">
+        <summary>Bestellung aus E-Mail importieren</summary>
+        <p>Füge den Text einer Bestell- oder Versandmail ein oder wähle eine gespeicherte <code>.eml</code>- oder <code>.txt</code>-Datei. Die Verarbeitung erfolgt nur auf diesem Gerät.</p>
+        <label class="mail-text-label">E-Mail-Text<textarea id="mail-text" rows="7" placeholder="Bestellmail hier einfügen"></textarea></label>
+        <div class="mail-actions"><label class="file-input">E-Mail-Datei<input id="mail-file" type="file" accept=".eml,.txt,message/rfc822,text/plain"></label><button id="analyze-mail" type="button">Artikel erkennen</button></div>
+        <p id="mail-status" class="order-status" role="status" aria-live="polite"></p>
+        <div id="mail-matches" class="mail-matches"></div>
+        <button id="import-mail" type="button" class="mail-import-button" disabled>Als offene Bestellung übernehmen</button>
+      </details>
       <h3 class="stock-subtitle">Köder & Sets</h3>
       <div id="products" class="product-list"></div>
       <h3 class="stock-subtitle">Schnüre, Vorfächer & Kleinteile</h3>
