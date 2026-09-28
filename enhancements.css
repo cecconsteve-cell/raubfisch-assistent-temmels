@@ -9,3 +9,22 @@
 .editorial{font-size:.72rem;color:#697d75}
 .sources{border-top:1px solid #d8e0d3;margin-top:28px;padding-top:18px;font-size:.82rem;line-height:1.7;color:#61746e}
 .product .stock-meta{display:block;color:#667d73;font-size:.78rem;margin-top:4px}
+.order-form{background:#fff;border:1px solid #d9e1d5;border-radius:12px;padding:18px;display:grid;grid-template-columns:minmax(0,2fr) 110px auto;gap:14px;align-items:end}
+.order-form label{display:flex;flex-direction:column;gap:8px;font-size:.82rem;font-weight:750}
+.order-form select,.order-form input{border:1px solid #cbd7cb;border-radius:8px;background:#f7f8f3;color:#142b34;font:inherit;padding:11px 12px;min-width:0}
+.order-actions,.order-buttons{display:flex;flex-wrap:wrap;gap:8px}
+.order-form button,.order button{border:1px solid #5f7d70;border-radius:8px;background:#fff;color:#255443;padding:10px 12px;font-weight:750;cursor:pointer}
+.order-form button.accent,.order button.deliver{background:#255443;color:#fff}
+.order-status{min-height:1.4em;color:#42645a;font-size:.86rem;margin:12px 2px 0}
+.order-list{margin-top:10px}
+.order-list h4{font-size:.9rem;margin:18px 0 9px}
+.order{background:#fff;border:1px solid #d9e1d5;border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:8px}
+.order span{display:block;color:#647971;font-size:.8rem;margin-top:4px}
+.empty-orders{color:#6b7e77;font-size:.84rem;margin:8px 2px}
+.stock-controls{display:grid;grid-template-columns:38px 38px 38px;align-items:center}
+.product .stock-controls button{min-width:0;width:38px;height:38px;padding:0;border-radius:7px;font-size:1.15rem}
+.product .stock-controls button:disabled{opacity:.35;cursor:not-allowed}
+.stock-controls output{text-align:center;font-weight:800;color:#255443}
+@media(max-width:800px){.order-form{grid-template-columns:minmax(0,1fr) 90px}.order-actions{grid-column:1/-1}.order{align-items:flex-start;flex-direction:column}}
+@media(max-width:580px){.order-form{grid-template-columns:1fr}.order-actions{grid-column:auto}.order-actions button,.order-buttons button{flex:1}.product{grid-template-columns:minmax(0,1fr) auto}.stock-controls{grid-template-columns:34px 32px 34px}.product .stock-controls button{width:34px;height:36px}}
+
