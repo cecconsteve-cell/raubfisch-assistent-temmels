@@ -1,14 +1,31 @@
 const CATALOG_URL = './data/catalog.json';
 const ADDITIONS_URL = './data/additions.json';
-const STORAGE_KEY = 'raubfisch-temmels-stock-v1';
+const STORAGE_KEY = 'raubfisch-temmels-stock-v2';
+const LEGACY_STORAGE_KEY = 'raubfisch-temmels-stock-v1';
+const ORDERS_KEY = 'raubfisch-temmels-orders-v1';
 const $ = (selector) => document.querySelector(selector);
 const split = (value) => String(value || '').toLocaleLowerCase('de').split('|').map(x => x.trim());
 const safe = (value) => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const shopLink = (url) => { try { const parsed = new URL(url); return parsed.protocol === 'https:' && ['www.camo-tackle.de','fish.shimano.com','www.rapala.eu'].includes(parsed.hostname) ? parsed.href : ''; } catch { return ''; } };
 
 let catalog;
-let owned = new Set();
-try { owned = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')); } catch { owned = new Set(); }
+let stock = {};
+let orders = {};
+try {
+  const savedStock = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+  if (savedStock && !Array.isArray(savedStock)) stock = savedStock;
+  else for (const id of JSON.parse(localStorage.getItem(LEGACY_STORAGE_KEY) || '[]')) stock[id] = 1;
+} catch { stock = {}; }
+try { orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || '{}') || {}; } catch { orders = {}; }
+
+const countFor = id => Math.max(0, Number(stock[id]) || 0);
+const owns = id => countFor(id) > 0;
+function saveStock() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(stock)); } catch { /* private browsing may block persistence */ }
+}
+function saveOrders() {
+  try { localStorage.setItem(ORDERS_KEY, JSON.stringify(orders)); } catch { /* private browsing may block persistence */ }
+}
 
 function productFor(combo) {
   if (combo.productId) return catalog.products.find(product => product.ID === combo.productId);
@@ -67,7 +84,7 @@ function requirementsFor(combo, filters) {
   })].filter(Boolean);
 }
 
-function hasItem(item) { return owned.has(item.id) || item.alternatives.some(id => owned.has(id)); }
+function hasItem(item) { return owns(item.id) || item.alternatives.some(owns); }
 
 function rank(combo, filters) {
   const waters = split(combo['Trübung']);
@@ -80,7 +97,7 @@ function rank(combo, filters) {
   if (filters.flow === 'stark' && combo['Rig-Art'] === 'Topwater') score -= 8;
   if (filters.flow === 'stark' && combo['Rig-Art'] === 'Jigspinner' && combo.ID === 'K014') score += 6;
   const product = productFor(combo);
-  if (product && owned.has(product.ID)) score += 2;
+  if (product && owns(product.ID)) score += 2;
   return score;
 }
 
@@ -106,9 +123,30 @@ function renderProducts() {
   $('#products').innerHTML = catalog.products.map(product => {
     const price = catalog.prices.find(item => item['Produkt-ID'] === product.ID);
     const link = shopLink(product['CAMO-Link']);
-    return `<article class="product"><div><h3>${safe(product.Produkt)} · ${safe(product.Farbe)}</h3><p>${safe(product.Fischart)} · ${safe(product['Rig-Art']).replaceAll('|', ', ')} · ${safe(product['Größe'])}</p>${price ? `<span class="price">${Number(price.Preis).toLocaleString('de-DE',{style:'currency',currency:'EUR'})} · Stand ${safe(price['Geprüft am'])}</span>` : ''}${link ? `<div><a class="product-link" href="${safe(link)}" target="_blank" rel="noopener noreferrer">Produkt ansehen</a></div>` : ''}</div><button type="button" data-id="${safe(product.ID)}" class="${owned.has(product.ID) ? 'owned' : ''}" aria-pressed="${owned.has(product.ID)}">${owned.has(product.ID) ? 'Vorhanden' : 'Hinzufügen'}</button></article>`;
+    return `<article class="product"><div><h3>${safe(product.Produkt)} · ${safe(product.Farbe)}</h3><p>${safe(product.Fischart)} · ${safe(product['Rig-Art']).replaceAll('|', ', ')} · ${safe(product['Größe'])}</p>${price ? `<span class="price">${Number(price.Preis).toLocaleString('de-DE',{style:'currency',currency:'EUR'})} · Stand ${safe(price['Geprüft am'])}</span>` : ''}${link ? `<div><a class="product-link" href="${safe(link)}" target="_blank" rel="noopener noreferrer">Produkt ansehen</a></div>` : ''}</div>${stockControls(product.ID, product.Produkt)}</article>`;
   }).join('');
-  $('#gear').innerHTML = catalog.gear.map(item => `<article class="product"><div><h3>${safe(item.name)}</h3><p>${safe(item.type)} · ${safe(item.fish).replaceAll('|', ', ')}</p><span class="stock-meta">${safe(item.spec)}</span><a class="product-link" href="${safe(shopLink(item.url))}" target="_blank" rel="noopener noreferrer">Material ansehen</a></div><button type="button" data-id="${safe(item.id)}" class="${owned.has(item.id) ? 'owned' : ''}" aria-pressed="${owned.has(item.id)}">${owned.has(item.id) ? 'Vorhanden' : 'Hinzufügen'}</button></article>`).join('');
+  $('#gear').innerHTML = catalog.gear.map(item => `<article class="product"><div><h3>${safe(item.name)}</h3><p>${safe(item.type)} · ${safe(item.fish).replaceAll('|', ', ')}</p><span class="stock-meta">${safe(item.spec)}</span><a class="product-link" href="${safe(shopLink(item.url))}" target="_blank" rel="noopener noreferrer">Material ansehen</a></div>${stockControls(item.id, item.name)}</article>`).join('');
+}
+
+function stockControls(id, name) {
+  const count = countFor(id);
+  return `<div class="stock-controls" aria-label="Bestand ${safe(name)}"><button type="button" data-stock-action="remove" data-id="${safe(id)}" aria-label="Einen entfernen" ${count ? '' : 'disabled'}>−</button><output aria-label="${count} vorhanden">${count}</output><button type="button" data-stock-action="add" data-id="${safe(id)}" aria-label="Einen hinzufügen">+</button></div>`;
+}
+
+function inventoryItems() {
+  return [
+    ...catalog.products.map(item => ({id:item.ID, name:`${item.Produkt} · ${item.Farbe}`})),
+    ...catalog.gear.map(item => ({id:item.id, name:item.name}))
+  ];
+}
+
+function itemName(id) {
+  return inventoryItems().find(item => item.id === id)?.name || id;
+}
+
+function renderOrders() {
+  const entries = Object.entries(orders).filter(([, order]) => Number(order.quantity) > 0);
+  $('#orders').innerHTML = entries.length ? `<h4>Offene Online-Bestellungen</h4>${entries.map(([id, order]) => `<article class="order"><div><strong>${safe(itemName(id))}</strong><span>${safe(order.quantity)} Stück · bestellt am ${safe(order.orderedAt)}</span></div><div class="order-buttons"><button type="button" data-cancel-id="${safe(id)}">Stornieren</button><button type="button" data-deliver-id="${safe(id)}" class="deliver">Als geliefert markieren</button></div></article>`).join('')}` : '<p class="empty-orders">Keine offenen Online-Bestellungen.</p>';
 }
 
 async function init() {
@@ -119,17 +157,52 @@ async function init() {
     catalog = {...original, sources:additions.sources, gear:additions.gear, products:[...original.products,...additions.products], combinations:[...original.combinations,...additions.combinations]};
     $('#data-status').textContent = `Geprüft ${additions.reviewedAt.split('-').reverse().join('.')}`;
     $('#sources').innerHTML = `Quellen der neuen Vorschläge: ${additions.sources.map(source => `<a href="${safe(shopLink(source.url))}" target="_blank" rel="noopener noreferrer">${safe(source.title)}</a>`).join(' · ')}`;
-    renderRecommendations(); renderProducts();
+    $('#order-item').innerHTML = inventoryItems().map(item => `<option value="${safe(item.id)}">${safe(item.name)}</option>`).join('');
+    renderRecommendations(); renderProducts(); renderOrders();
     $('#filters').addEventListener('change', renderRecommendations);
-    const toggleStock = event => {
-      const button = event.target.closest('button[data-id]');
+    const changeStock = event => {
+      const button = event.target.closest('button[data-stock-action]');
       if (!button) return;
-      if (owned.has(button.dataset.id)) owned.delete(button.dataset.id); else owned.add(button.dataset.id);
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify([...owned])); } catch { /* private browsing may block persistence */ }
+      const id = button.dataset.id;
+      stock[id] = Math.max(0, countFor(id) + (button.dataset.stockAction === 'add' ? 1 : -1));
+      if (!stock[id]) delete stock[id];
+      saveStock();
       renderProducts(); renderRecommendations();
     };
-    $('#products').addEventListener('click', toggleStock);
-    $('#gear').addEventListener('click', toggleStock);
+    $('#products').addEventListener('click', changeStock);
+    $('#gear').addEventListener('click', changeStock);
+    $('#order-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const id = $('#order-item').value;
+      const quantity = Math.max(1, Math.min(99, Number.parseInt($('#order-quantity').value, 10) || 1));
+      if (event.submitter?.value === 'ordered') {
+        const current = orders[id] || {quantity:0, orderedAt:new Date().toLocaleDateString('de-DE')};
+        orders[id] = {...current, quantity:Number(current.quantity) + quantity};
+        saveOrders(); renderOrders();
+        $('#order-status').textContent = `${quantity} × ${itemName(id)} als bestellt gespeichert.`;
+      } else {
+        stock[id] = countFor(id) + quantity;
+        saveStock(); renderProducts(); renderRecommendations();
+        $('#order-status').textContent = `${quantity} × ${itemName(id)} zum Bestand hinzugefügt.`;
+      }
+      $('#order-quantity').value = '1';
+    });
+    $('#orders').addEventListener('click', event => {
+      const deliver = event.target.closest('button[data-deliver-id]');
+      const cancel = event.target.closest('button[data-cancel-id]');
+      if (!deliver && !cancel) return;
+      const id = (deliver || cancel).dataset[deliver ? 'deliverId' : 'cancelId'];
+      const quantity = Number(orders[id]?.quantity) || 0;
+      if (deliver && quantity) {
+        stock[id] = countFor(id) + quantity;
+        saveStock();
+        $('#order-status').textContent = `${quantity} × ${itemName(id)} geliefert und in den Bestand übernommen.`;
+      } else if (cancel) {
+        $('#order-status').textContent = `Bestellung für ${itemName(id)} entfernt.`;
+      }
+      delete orders[id]; saveOrders();
+      renderOrders(); renderProducts(); renderRecommendations();
+    });
   } catch {
     $('#match-note').textContent = 'Die Daten konnten nicht geladen werden. Öffne die App einmal mit Internet und versuche es erneut.';
     $('#results').innerHTML = '';
@@ -144,3 +217,4 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js', {updateViaCache:'none'}).then(registration => registration.update()).catch(() => {}));
 }
 init();
+
