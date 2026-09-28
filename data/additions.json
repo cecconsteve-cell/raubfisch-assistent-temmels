@@ -8,7 +8,11 @@
     {"id":"camo-spinner","title":"Nories In The Bait Bass 12 g bei CAMO","url":"https://www.camo-tackle.de/12g-In-The-Bait-Bass"},
     {"id":"rapala","title":"Rapala Skitter V","url":"https://www.rapala.eu/eu_en/skitter-v"},
     {"id":"shimano","title":"Shimano Raubfisch-Schnur-Guide","url":"https://fish.shimano.com/de-DE/content/c/fishing-line-guide/predator-lines.html"},
-    {"id":"camo-gear","title":"CAMO Texas & Carolina Rig Box","url":"https://www.camo-tackle.de/CAMO-Texas-Carolina-Rig-Box"}
+    {"id":"camo-gear","title":"CAMO Texas & Carolina Rig Box","url":"https://www.camo-tackle.de/CAMO-Texas-Carolina-Rig-Box"},
+    {"id":"camo-ned","title":"CAMO Ned Rig Box","url":"https://www.camo-tackle.de/CAMO-Ned-Rig-Box"},
+    {"id":"camo-ned-guide","title":"CAMO Ned Rig Ratgeber","url":"https://www.camo-tackle.de/Ned-Rig"},
+    {"id":"camo-big-trd","title":"Z-Man 4 Big TRD bei CAMO","url":"https://www.camo-tackle.de/4-Big-TRD-Fire-Craw"},
+    {"id":"camo-trd-tubez","title":"Z-Man 2.75 TRD TubeZ bei CAMO","url":"https://www.camo-tackle.de/nl/275-TRD-TubeZ"}
   ],
   "products": [
     {"ID":"P011","Fischart":"Hecht","Rig-Art":"Screw Jig|Jig","Marke":"Keitech","Produkt":"Easy Shiner 6.5","Größe":"16,5 cm","Farbe":"Black","Typ":"Köder","CAMO-Link":"https://www.camo-tackle.de/65-Easy-Shiner-Black"},
@@ -16,7 +20,10 @@
     {"ID":"P013","Fischart":"Rapfen","Rig-Art":"Topwater","Marke":"Nories","Produkt":"ZagStick Pencil","Größe":"7,5 cm · 4,7 g","Farbe":"Reflect AYU","Typ":"Köder","CAMO-Link":"https://www.camo-tackle.de/ZagStick-Pencil"},
     {"ID":"P014","Fischart":"Rapfen|Barsch","Rig-Art":"Jigspinner","Marke":"Nories","Produkt":"In The Bait Bass 12g","Größe":"12 g","Farbe":"Spotted Silver","Typ":"Köder","CAMO-Link":"https://www.camo-tackle.de/12g-In-The-Bait-Bass"},
     {"ID":"P015","Fischart":"Rapfen|Barsch","Rig-Art":"Jigspinner","Marke":"Nories","Produkt":"In The Bait Bass 18g","Größe":"18 g","Farbe":"Muddy Sense","Typ":"Köder","CAMO-Link":"https://www.camo-tackle.de/18g-In-The-Bait-Bass"},
-    {"ID":"P016","Fischart":"Rapfen","Rig-Art":"Topwater","Marke":"Rapala","Produkt":"Skitter V","Größe":"10 cm · 14 g","Farbe":"natürlich","Typ":"Köder","CAMO-Link":"https://www.rapala.eu/eu_en/skitter-v"}
+    {"ID":"P016","Fischart":"Rapfen","Rig-Art":"Topwater","Marke":"Rapala","Produkt":"Skitter V","Größe":"10 cm · 14 g","Farbe":"natürlich","Typ":"Köder","CAMO-Link":"https://www.rapala.eu/eu_en/skitter-v"},
+    {"ID":"P017","Fischart":"Barsch|Zander","Rig-Art":"Ned Rig","Marke":"CAMO Lures","Produkt":"Ned Rig Box","Größe":"Set · 2,8–5,6 g","Farbe":"gemischt","Typ":"Set","CAMO-Link":"https://www.camo-tackle.de/CAMO-Ned-Rig-Box"},
+    {"ID":"P018","Fischart":"Zander|Barsch","Rig-Art":"Ned Rig|Carolina|Texas","Marke":"Z-Man","Produkt":"Big TRD","Größe":"4 / 10,5 cm · 6 g","Farbe":"Fire Craw","Typ":"Köder","CAMO-Link":"https://www.camo-tackle.de/4-Big-TRD-Fire-Craw"},
+    {"ID":"P019","Fischart":"Barsch","Rig-Art":"Ned Rig","Marke":"Z-Man","Produkt":"TRD TubeZ","Größe":"2.75 / 7 cm · 3 g","Farbe":"natürlich","Typ":"Köder","CAMO-Link":"https://www.camo-tackle.de/nl/275-TRD-TubeZ"}
   ],
   "combinations": [
     {"ID":"K009","Fischart":"Hecht","Rig-Art":"Screw Jig","Trübung":"klar|leicht trüb","Wetter/Licht":"sonnig|bewölkt|Dämmerung","Köder":"Easy Shiner 6.5","Farbe":"Black","Größe":"16,5 cm","Haken":"passender Stinger","Gewicht/Zubehör":"Screw Jig + Stinger","Führung":"gleichmäßig einkurbeln, kurze Stopps","Score":88,"productId":"P011","sourceIds":["camo-shad","camo-pike","shimano"],"status":"Praxisvorschlag"},
@@ -25,7 +32,10 @@
     {"ID":"K012","Fischart":"Rapfen","Rig-Art":"Topwater","Trübung":"klar|leicht trüb","Wetter/Licht":"sonnig|früh|Dämmerung","Köder":"ZagStick Pencil","Farbe":"Reflect AYU","Größe":"7,5 cm","Haken":"vormontierte Drillinge","Gewicht/Zubehör":"4,7 g Eigengewicht","Führung":"Walk-the-Dog an der Oberfläche, kurze Pausen","Score":89,"productId":"P013","sourceIds":["camo-pencil","shimano"],"status":"Praxisvorschlag"},
     {"ID":"K013","Fischart":"Rapfen","Rig-Art":"Jigspinner","Trübung":"klar|leicht trüb","Wetter/Licht":"sonnig|bewölkt|früh","Köder":"In The Bait Bass 12g","Farbe":"Spotted Silver","Größe":"12 g","Haken":"vormontierter Haken","Gewicht/Zubehör":"12 g Eigengewicht","Führung":"weit werfen, zügig durchs Mittelwasser führen","Score":87,"productId":"P014","sourceIds":["camo-spinner","shimano"],"status":"Praxisvorschlag"},
     {"ID":"K014","Fischart":"Rapfen","Rig-Art":"Jigspinner","Trübung":"leicht trüb|trüb|stark trüb","Wetter/Licht":"bewölkt|Dämmerung","Köder":"In The Bait Bass 18g","Farbe":"Muddy Sense","Größe":"18 g","Haken":"vormontierter Haken","Gewicht/Zubehör":"18 g Eigengewicht","Führung":"weit werfen, zügig bis moderat einkurbeln","Score":85,"productId":"P015","sourceIds":["camo-spinner","shimano"],"status":"Praxisvorschlag"},
-    {"ID":"K015","Fischart":"Rapfen","Rig-Art":"Topwater","Trübung":"klar|leicht trüb","Wetter/Licht":"sonnig|früh|Dämmerung","Köder":"Skitter V","Farbe":"natürlich","Größe":"10 cm","Haken":"vormontierte Drillinge","Gewicht/Zubehör":"14 g Eigengewicht","Führung":"kurze Schläge, gleiten lassen","Score":83,"productId":"P016","sourceIds":["rapala","shimano"],"status":"Praxisvorschlag"}
+    {"ID":"K015","Fischart":"Rapfen","Rig-Art":"Topwater","Trübung":"klar|leicht trüb","Wetter/Licht":"sonnig|früh|Dämmerung","Köder":"Skitter V","Farbe":"natürlich","Größe":"10 cm","Haken":"vormontierte Drillinge","Gewicht/Zubehör":"14 g Eigengewicht","Führung":"kurze Schläge, gleiten lassen","Score":83,"productId":"P016","sourceIds":["rapala","shimano"],"status":"Praxisvorschlag"},
+    {"ID":"K016","Fischart":"Barsch","Rig-Art":"Ned Rig","Trübung":"klar|leicht trüb","Wetter/Licht":"sonnig|bewölkt|früh|passiv","Köder":"TRD TubeZ","Farbe":"natürlich","Größe":"7 cm","Haken":"Ned Jig Gr. 1–1/0","Gewicht/Zubehör":"3,5 g Ned Jig","Führung":"über Grund schleifen, kleine Hüpfer und lange Pausen","Score":91,"productId":"P019","sourceIds":["camo-ned","camo-ned-guide","camo-trd-tubez"],"status":"Praxisvorschlag · geprüft 28.09.2026"},
+    {"ID":"K017","Fischart":"Barsch","Rig-Art":"Ned Rig","Trübung":"leicht trüb|trüb","Wetter/Licht":"bewölkt|Dämmerung|passiv","Köder":"Ned Rig Box","Farbe":"gemischt","Größe":"7–10 cm","Haken":"Weedless Ned Jig Gr. 1–2/0","Gewicht/Zubehör":"4,6 g Weedless Ned Jig","Führung":"langsam an Steinpackung und Kante zupfen","Score":88,"productId":"P017","sourceIds":["camo-ned","camo-ned-guide"],"status":"Praxisvorschlag · geprüft 28.09.2026"},
+    {"ID":"K018","Fischart":"Zander","Rig-Art":"Ned Rig","Trübung":"klar|leicht trüb|trüb","Wetter/Licht":"bewölkt|Dämmerung|Nacht|passiv","Köder":"Big TRD","Farbe":"Fire Craw","Größe":"10,5 cm","Haken":"Ned Jig 1/0–3/0","Gewicht/Zubehör":"5,6 g Ned Jig","Führung":"grundnah stehen lassen, nur kurze Anlupfer","Score":86,"productId":"P018","sourceIds":["camo-ned","camo-ned-guide","camo-big-trd"],"status":"Praxisvorschlag · geprüft 28.09.2026"}
   ],
   "gear": [
     {"id":"G01","name":"Geflochtene Hauptschnur Barsch","spec":"0,10–0,13 mm","type":"Schnur","fish":"Barsch","url":"https://fish.shimano.com/de-DE/content/c/fishing-line-guide/predator-lines.html"},
@@ -49,6 +59,7 @@
     {"id":"G19","name":"CAMO Jigkopf Set Barsch","spec":"3,5–14 g · #2–1/0","type":"Jigkopf","fish":"Barsch","url":"https://www.camo-tackle.de/CAMO-Jigkopf-Set-Barsch"},
     {"id":"G20","name":"CAMO Jigkopf Set Zander","spec":"7–18 g · 2/0–4/0","type":"Jigkopf","fish":"Zander","url":"https://www.camo-tackle.de/CAMO-Jigkopf-Set-Zander"},
     {"id":"G21","name":"CAMO Screw Jig + Stinger","spec":"5–20 g als Startbereich · Stinger passend zu 12–18 cm","type":"Screw Jig","fish":"Hecht","url":"https://www.camo-tackle.de/CAMO-Swimbait-Set-Hecht"},
-    {"id":"G22","name":"Großfisch-Jigkopf + Stinger","spec":"10–25 g als Startbereich · zum 16,5 cm Shad passend","type":"Jigkopf","fish":"Hecht","url":"https://www.camo-tackle.de/CAMO-Swimbait-Set-Hecht"}
+    {"id":"G22","name":"Großfisch-Jigkopf + Stinger","spec":"10–25 g als Startbereich · zum 16,5 cm Shad passend","type":"Jigkopf","fish":"Hecht","url":"https://www.camo-tackle.de/CAMO-Swimbait-Set-Hecht"},
+    {"id":"G23","name":"CAMO Ned Jigs + Weedless Ned Jigs","spec":"Barsch 2,8–4,6 g / Gr. 1–2/0 · Zander 4,6–5,6 g / 1/0–3/0","type":"Ned Jig","fish":"Barsch|Zander","url":"https://www.camo-tackle.de/CAMO-Ned-Rig-Box"}
   ]
 }
