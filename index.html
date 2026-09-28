@@ -39,7 +39,15 @@
     </section>
     <section id="bestand" class="section" aria-labelledby="stock-title">
       <div class="section-heading"><div><p class="eyebrow dark">02 / DEINE BOX</p><h2 id="stock-title">Mein Bestand</h2></div><span class="pill">Auf diesem Gerät gespeichert</span></div>
-      <p class="section-copy">Markiere Köder und Kleinteile, die du bereits besitzt. Fehlende Teile erscheinen direkt bei jeder Empfehlung. Die Liste bleibt auf diesem Gerät gespeichert.</p>
+      <p class="section-copy">Erfasse neue Käufe und Online-Bestellungen. Direkt gekaufte oder gelieferte Artikel gehen in deinen Bestand; offene Bestellungen zählen noch nicht als verfügbar.</p>
+      <h3 class="stock-subtitle">Neuer Kauf oder Bestellung</h3>
+      <form id="order-form" class="order-form">
+        <label>Artikel<select id="order-item" required></select></label>
+        <label>Menge<input id="order-quantity" type="number" min="1" max="99" value="1" inputmode="numeric" required></label>
+        <div class="order-actions"><button type="submit" name="kind" value="purchased">Im Geschäft gekauft</button><button type="submit" name="kind" value="ordered" class="accent">Online bestellt</button></div>
+      </form>
+      <p id="order-status" class="order-status" role="status" aria-live="polite"></p>
+      <div id="orders" class="order-list"></div>
       <h3 class="stock-subtitle">Köder & Sets</h3>
       <div id="products" class="product-list"></div>
       <h3 class="stock-subtitle">Schnüre, Vorfächer & Kleinteile</h3>
@@ -51,3 +59,4 @@
   <script src="./app.js" defer></script>
 </body>
 </html>
+
