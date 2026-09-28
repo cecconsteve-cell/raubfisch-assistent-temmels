@@ -6,7 +6,7 @@ Eine installierbare Offline-Web-App für das Uferangeln an der Mosel bei Temmels
 
 - Filter für vier Fischarten (Barsch, Zander, Hecht, Rapfen), Wassertrübung, Licht/Wetter, Strömung und Rig.
 - Bis zu drei Empfehlungen aus 18 Kombinationen, mit Köder, Haken, Startgewicht, Führung und einer Materialliste. Hecht benötigt immer ein bissfestes Stahlvorfach.
-- Köder, Schnüre, Vorfächer, Snaps, Stopper, Perlen, Wirbel, Gewichte und Haken können im lokalen Bestand markiert werden. Fehlende Teile stehen direkt in jeder Empfehlung. Vorhandene Köder erhalten einen kleinen Vorrang bei gleicher Eignung.
+- Köder, Schnüre, Vorfächer, Snaps, Stopper, Perlen, Wirbel, Gewichte und Haken werden mengenbasiert im lokalen Bestand geführt. Direktkäufe erhöhen den Bestand sofort; Online-Bestellungen erst nach der Lieferbestätigung. Fehlende Teile stehen direkt in jeder Empfehlung.
 - Offline-Nutzung nach dem ersten vollständigen Laden über einen Service Worker.
 - Shop-Links und vier **historische** CAMO-Preise mit Prüfdatum 27.09.2026. Es findet keine automatische Preisaktualisierung statt.
 - Bei jedem Öffnen mit Internet werden die aktuell veröffentlichten Daten geladen. Neue Marktangebote werden redaktionell recherchiert und nach Prüfung in den Katalog übernommen; die Seite führt keine Live-Shop-Suche aus.
@@ -26,3 +26,4 @@ Die Empfehlung passt die Basisbewertungen an Wasser, Licht, Strömung und vorsic
 ## Pflege der Empfehlungen
 
 Neue Rigs und Köder erst nach Abgleich mit offiziellen Produkt- oder Herstellerseiten in `data/additions.json` übernehmen, den Link unter `sources` dokumentieren und `reviewedAt` aktualisieren. CAMO Tackle zuerst prüfen, ergänzend Hersteller und internationale Quellen. Keine aktuellen Preise ohne Datum übernehmen. Nach Änderungen `node tools/test_app.mjs` ausführen, dann `sw.js` für einen neuen Offline-Cache aktualisieren.
+
