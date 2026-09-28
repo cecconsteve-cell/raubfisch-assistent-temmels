@@ -4,10 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#102c36">
-  <meta name="description" content="Köder- und Rig-Empfehlungen für Barsch und Zander an der Mosel bei Temmels.">
+  <meta name="description" content="Köder-, Rig- und Materialempfehlungen für Barsch, Zander, Hecht und Rapfen an der Mosel bei Temmels.">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" type="image/svg+xml" href="./icons/fish.svg">
   <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./enhancements.css">
   <title>Raubfisch-Assistent Temmels</title>
 </head>
 <body>
@@ -29,7 +30,8 @@
         <label>Zielfisch<select id="fish"><option>Zander</option><option>Barsch</option><option>Hecht</option><option>Rapfen</option></select></label>
         <label>Wasser<select id="water"><option>klar</option><option>leicht trüb</option><option>trüb</option><option>stark trüb</option></select></label>
         <label>Licht & Wetter<select id="light"><option value="bewölkt">Bewölkt</option><option value="sonnig">Sonnig</option><option value="Dämmerung">Dämmerung</option><option value="Nacht">Nacht</option><option value="früh">Früh</option></select></label>
-        <label>Rig<select id="rig"><option value="">Alle Rigs</option><option>Jig</option><option>Free Rig</option><option>Texas</option><option>Carolina</option><option>Dropshot</option></select></label>
+        <label>Rig<select id="rig"><option value="">Alle Rigs</option><option>Jig</option><option>Free Rig</option><option>Texas</option><option>Carolina</option><option>Dropshot</option><option>Screw Jig</option><option>Topwater</option><option>Jigspinner</option></select></label>
+        <label>Strömung<select id="flow"><option value="normal">Normal</option><option value="ruhig">Ruhig</option><option value="stark">Stark</option></select></label>
         <label class="checkbox"><input type="checkbox" id="passive">Fische beißen vorsichtig</label>
       </form>
       <p id="match-note" class="match-note" role="status"></p>
@@ -37,10 +39,13 @@
     </section>
     <section id="bestand" class="section" aria-labelledby="stock-title">
       <div class="section-heading"><div><p class="eyebrow dark">02 / DEINE BOX</p><h2 id="stock-title">Mein Bestand</h2></div><span class="pill">Auf diesem Gerät gespeichert</span></div>
-      <p class="section-copy">Markiere, was du bereits besitzt. Die Liste bleibt auch ohne Verbindung auf diesem Gerät erhalten.</p>
+      <p class="section-copy">Markiere Köder und Kleinteile, die du bereits besitzt. Fehlende Teile erscheinen direkt bei jeder Empfehlung. Die Liste bleibt auf diesem Gerät gespeichert.</p>
+      <h3 class="stock-subtitle">Köder & Sets</h3>
       <div id="products" class="product-list"></div>
+      <h3 class="stock-subtitle">Schnüre, Vorfächer & Kleinteile</h3>
+      <div id="gear" class="product-list"></div>
     </section>
-    <section class="section compact" aria-labelledby="about-title"><p class="eyebrow dark">03 / HINWEISE</p><h2 id="about-title">So nutzt du die App</h2><div class="note-grid"><p><strong>Offline.</strong> Öffne die App einmal mit Internet. Danach sind die gespeicherten Empfehlungen und dein Bestand ohne Verbindung verfügbar.</p><p><strong>Preisangaben.</strong> Gelistete CAMO-Preise stammen aus der Datenbasis vom 27.09.2026. Der Shop zeigt den aktuellen Preis, sobald du online bist.</p><p><strong>Hecht & Rapfen.</strong> Diese Fischarten sind vorbereitet. Für sie liegen noch keine geprüften Kombinationen in der Datenbasis vor.</p></div></section>
+    <section class="section compact" aria-labelledby="about-title"><p class="eyebrow dark">03 / HINWEISE</p><h2 id="about-title">So nutzt du die App</h2><div class="note-grid"><p><strong>Gewichte.</strong> Die Angaben sind Startwerte für das Ufer. Wähle an der Mosel nur so viel Gewicht, dass du noch sauberen Köderkontakt hast. Bei Hecht gehört ein bissfestes Vorfach dazu.</p><p><strong>Offline & Bestand.</strong> Nach dem ersten Laden bleibt die App ohne Verbindung nutzbar. Dein Bestand liegt nur auf diesem Gerät; er wird nicht zwischen Geräten synchronisiert.</p><p><strong>Datenstand.</strong> Vorhandene CAMO-Preise sind vom 27.09.2026 und keine Live-Preise. Neue Vorschläge sind redaktionelle Ausgangspunkte, keine gemessenen Fangquoten. Beim Öffnen online lädt die App den neuesten veröffentlichten Katalog.</p></div><p id="sources" class="sources"></p></section>
   </main>
   <footer><div class="wrap">Raubfisch-Assistent Temmels <span>·</span> Uferangeln an der Mosel</div></footer>
   <script src="./app.js" defer></script>
